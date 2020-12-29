@@ -9,7 +9,7 @@
         <class>jpa.entity.Contact</class>
         <class>jpa.entity.Event</class>
         <class>jpa.entity.Student</class>
-        <class>jpa.entity.Group</class>
+        <class>jpa.entity.GroupOfClimbers</class>
 
         <properties>
             <!--строка подключения к бд-->

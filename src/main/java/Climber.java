@@ -1,6 +1,5 @@
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /*
@@ -12,13 +11,6 @@ import java.util.List;
         @NamedQuery(name = "Climber.getByAge", query = "SELECT c FROM Climber c WHERE c.age >= :from AND c.age < :to")
 })
 public class Climber extends BaseIdentify {
-    /*
-    ####Альпинист:
- - имя (не менее 3 символов);
- - адрес проживания (не менее 5 символов);
- - возраст (не менее 18 лет);
- - коллекция групп (при необходимости);
-     */
 
     @Column(nullable = false)
     private String fullName;
@@ -30,7 +22,7 @@ public class Climber extends BaseIdentify {
     private int age;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "climbers")
-    private List<Group> groups;
+    private List<GroupOfClimbers> groupOfClimbers;
 
     public Climber() {
     }
@@ -39,17 +31,12 @@ public class Climber extends BaseIdentify {
         setFullName(fullName);
         setAddress(address);
         setAge(age);
-        this.groups = new ArrayList<>();
+        this.groupOfClimbers = new ArrayList<>();
     }
 
-    public void addGroup(Group group) {
-        this.groups.add(group);
+    public void addGroup(GroupOfClimbers groupOfClimbers) {
+        this.groupOfClimbers.add(groupOfClimbers);
     }
-
-    //    public void setGroup(Group group) {
-//        Objects.requireNonNull(group, "group cannot be null");
-//        this.group = group;
-//    }
 
     private void setFullName(String fullName) {
         if (fullName != null && fullName.trim().length() >= 3) this.fullName = fullName;
@@ -64,5 +51,14 @@ public class Climber extends BaseIdentify {
     private void setAge(int age) {
         if (age >= 18) this.age = age;
         else throw new IllegalArgumentException("Возраст не может быть меньше 18 лет");
+    }
+
+    @Override
+    public String toString() {
+        return "Climber{" +
+                "fullName='" + fullName + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

@@ -1,22 +1,11 @@
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 
 /*
 3. Получение Гор по названию страны
 */
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Mountain.getByCountry", query = "SELECT m FROM Mountain m WHERE m.country = :country")
-})
 public class Mountain extends BaseIdentify {
-    /*
-    ####Гора:
- - название (не менее 4 символов);
- - страна (не менее 4 символов);
- - высота (не менее 100 метров);
-     */
     @Column(nullable = false)
     private String name;
 
@@ -57,5 +46,14 @@ public class Mountain extends BaseIdentify {
         } else {
             throw new IllegalArgumentException("Высота не может быть меньше 100 метров.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Mountain{" +
+                "name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", height=" + height +
+                '}';
     }
 }

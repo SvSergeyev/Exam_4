@@ -1,32 +1,16 @@
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
-/*
-2. Получение списка Групп по названию Горы
-4. Получение групп, набор в которые еще открыт.
- */
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Group.getByMountain", query = "SELECT g FROM Group g WHERE g.mountain = :mountain"),
-        @NamedQuery(name = "Group.getAllOpen", query = "SELECT g FROM Group g WHERE g.isOpen = :condition")
-})
-public class Group extends BaseIdentify {
-    /*
-    ####Группа для восхождения на гору:
- - Гора;
- - коллекция Альпинистов;
- - идёт набор в группу или нет;
- - дата восхождения;
- - продолжительность восхождения;
-     */
+public class GroupOfClimbers extends BaseIdentify {
     @Transient
     private int count;
+
+    @Transient
+    LocalDate dateOfClimbingEnding;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -34,7 +18,7 @@ public class Group extends BaseIdentify {
 
     @ManyToMany
     @JoinTable(name = "climbers_group",
-        joinColumns = @JoinColumn(name = "group_id"),
+        joinColumns = @JoinColumn(name = "groupOfCl_id"),
         inverseJoinColumns = @JoinColumn(name = "climber_id"))
     private List<Climber> climbers;
 
@@ -49,11 +33,11 @@ public class Group extends BaseIdentify {
 
     private int groupSize;
 
-    public Group() {
+    public GroupOfClimbers() {
     }
 
-    public Group(Mountain mountain, LocalDate dateOfClimbing,
-                 int climbingDurationInDays, int groupSize) {
+    public GroupOfClimbers(Mountain mountain, LocalDate dateOfClimbing,
+                           int climbingDurationInDays, int groupSize) {
         setOpen();
         setMountain(mountain);
         setDateOfClimbing(dateOfClimbing);
@@ -76,15 +60,15 @@ public class Group extends BaseIdentify {
     }
 
     private void setDateOfClimbing(LocalDate dateOfClimbing) {
-//        if (dateOfClimbing == null)
-//            throw new IllegalArgumentException("Некорректная дата восхождения");
-//        else {
-//            if (dateOfClimbing.isBefore(LocalDate.now())) {
-//                throw new IllegalArgumentException("Некорректная дата восхождения");
-//            } else {
+        if (dateOfClimbing == null)
+            throw new IllegalArgumentException("Некорректная дата восхождения");
+        else {
+            if (dateOfClimbing.isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Некорректная дата восхождения");
+            } else {
                 this.dateOfClimbing = dateOfClimbing;
-//            }
-//        }
+            }
+        }
     }
 
     private void setGroupSize(int groupSize) {
@@ -119,5 +103,18 @@ public class Group extends BaseIdentify {
                 throw new IllegalArgumentException("Group recruitment is closed");
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GroupOfClimbers{" +
+                "dateOfClimbingEnding=" + dateOfClimbingEnding +
+                ", mountain=" + mountain +
+                ", climbers=" + climbers +
+                ", isOpen=" + isOpen +
+                ", dateOfClimbing=" + dateOfClimbing +
+                ", climbingDurationInDays=" + climbingDurationInDays +
+                ", groupSize=" + groupSize +
+                '}';
     }
 }

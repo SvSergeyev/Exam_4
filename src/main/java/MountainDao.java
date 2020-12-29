@@ -27,7 +27,7 @@ public class MountainDao implements Dao<Mountain, Integer> {
     public List<Mountain> getByCountry(String country) {
 //        3. Получение Гор по названию страны
         TypedQuery<Mountain> query =
-                manager.createNamedQuery("Mountain.getByCountry", Mountain.class);
+                manager.createQuery("SELECT m FROM Mountain m WHERE m.country = :country", Mountain.class);
         query.setParameter("country", country.toLowerCase());
         return query.getResultList();
     }

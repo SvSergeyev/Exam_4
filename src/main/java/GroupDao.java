@@ -2,7 +2,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class GroupDao implements Dao<Group, Integer> {
+public class GroupDao implements Dao<GroupOfClimbers, Integer> {
     private EntityManager manager;
 
     public GroupDao(EntityManager manager) {
@@ -10,33 +10,33 @@ public class GroupDao implements Dao<Group, Integer> {
     }
 
     @Override
-    public void add(Group group) {
-        manager.persist(group);
+    public void add(GroupOfClimbers groupOfClimbers) {
+        manager.persist(groupOfClimbers);
     }
 
     @Override
-    public Group getByPK(Integer id) {
-        return manager.find(Group.class, id);
+    public GroupOfClimbers getByPK(Integer id) {
+        return manager.find(GroupOfClimbers.class, id);
     }
 
     @Override
-    public void delete(Group group) {
-        manager.remove(group);
+    public void delete(GroupOfClimbers groupOfClimbers) {
+        manager.remove(groupOfClimbers);
     }
 
-    public List<Group> getByMountain(Mountain mountain) {
+    public List<GroupOfClimbers> getByMountain(String mountain) {
 //        2. Получение списка Групп по названию Горы
-        TypedQuery<Group> query =
-                manager.createNamedQuery("Group.getByMountain", Group.class);
-        query.setParameter("mountain", mountain);
+        TypedQuery<GroupOfClimbers> query =
+                manager.createQuery("SELECT g FROM GroupOfClimbers g WHERE g.mountain.name = :mountainName", GroupOfClimbers.class);
+        query.setParameter("mountainName", mountain);
         return query.getResultList();
     }
 
-    public List<Group> getAllOpen(Boolean condition) {
+    public List<GroupOfClimbers> getAllOpen(Boolean isOpen) {
 //        4. Получение групп, набор в которые еще открыт.
-        TypedQuery<Group> query =
-                manager.createNamedQuery("Group.getAllOpen", Group.class);
-        query.setParameter("isOpen", condition);
+        TypedQuery<GroupOfClimbers> query =
+                manager.createQuery("SELECT g FROM GroupOfClimbers g WHERE g.isOpen = :isOpen", GroupOfClimbers.class);
+        query.setParameter("isOpen", isOpen);
         return query.getResultList();
     }
 }
